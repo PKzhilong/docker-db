@@ -51,19 +51,16 @@ services:
   mysql:
     image: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: admin888
       TZ: Asia/Shanghai
     volumes:
         - ./mysql/data:/var/lib/mysql
         - ./mysql/config:/etc/mysql/conf.d
-        #for mac 
-        #- ./mysql/data:/var/lib/mysql:delegated
-        #- ./mysql/config:/etc/mysql/conf.d:cached
     expose:
       - 3306
     ports:
-      - "3306:3306"
-    restart: on-failure
+      - "3308:3306"
+
 
   redis:
     image: redis:latest
