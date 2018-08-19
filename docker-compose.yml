@@ -12,8 +12,9 @@ services:
      - "443:443"
     # external_links:
     #  - php7.2:php7.2
+    env_file: .env
     volumes:
-     - ./www:/var/www/html/
+     - ${WORK_DIR}:/var/www/html/
      - ./nginx/conf.d:/etc/nginx/conf.d
      - ./nginx/logs:/var/log/nginx/
      #for mac,can improve read io speed 提升读取速度
@@ -35,7 +36,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./www/:/var/www/html/
+      - ${WORK_DIR}/:/var/www/html/
       - ./php/php7.2/supervisor/:/etc/supervisor/conf.d/
       # for mac
       # - ./www/:/var/www/html/:cached
@@ -50,8 +51,9 @@ services:
     restart: on-failure
   mysql:
     image: mariadb
+    env_file: .env
     environment:
-      MYSQL_ROOT_PASSWORD: admin888
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       TZ: Asia/Shanghai
     volumes:
         - ./mysql/data:/var/lib/mysql
