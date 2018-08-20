@@ -5,6 +5,5 @@ nginx/conf.d/*
 mongo/data/*
 mysql2/data/*
 
-commit_template
 www/*
 !www/index.php
