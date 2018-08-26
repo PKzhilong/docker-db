@@ -112,9 +112,3 @@ services:
   #     - "27017:27017"
 
  
-  golang:
-         build: ./golang
-         volumes:
-                 - ${GO_WORK_DIR}:/go
-         environment:
-                TZ: Asia/Shanghai
