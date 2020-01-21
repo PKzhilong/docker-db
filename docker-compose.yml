@@ -35,6 +35,8 @@ services:
       - 9000
     ports:
       - "9000:9000"
+    links:
+      - mysql
     volumes:
       - ${WORK_DIR}/:/var/www/html/
       - ./php/php7.2/supervisor/:/etc/supervisor/conf.d/
@@ -86,23 +88,25 @@ services:
       TZ: Asia/Shanghai
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    # networks: 
+      # - common
 #     RABBITMQ_DEFAULT_VHOST: /
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    expose:
-      - 8080
-      - 80
-    ports:
-      - "8080:80"
-    depends_on:
-      - "mysql"
-    environment:
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: root
-      TZ: Asia/Shanghai
-    restart: on-failure
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   expose:
+  #     - 8080
+  #     - 80
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - "mysql"
+  #   environment:
+  #     PMA_HOST: mysql
+  #     PMA_USER: root
+  #     PMA_PASSWORD: root
+  #     TZ: Asia/Shanghai
+  #   restart: on-failure
 
   # mongo:
   #   image: mongo
@@ -110,5 +114,7 @@ services:
   #     - 27017
   #   ports:
   #     - "27017:27017"
-
+# networks: 
+  #  common:
+    #  driver: bridge
  
