@@ -1,0 +1,75 @@
+version: '3'
+services: 
+  mysql:
+    image: mariadb
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Shanghai
+    volumes:
+        - ./mysql/data:/var/lib/mysql
+        - ./mysql/config:/etc/mysql/conf.d
+    expose:
+      - 3306
+    ports:
+      - "3308:3306"
+
+  redis:
+    image: redis:latest
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: Asia/Shanghai
+    restart: on-failure
+
+  # rabbitmq:
+    # image: rabbitmq:3.7.2-management
+    # expose:
+    #   - 5672
+    #   - 15672
+    # ports:
+    #   - "15672:15672"
+    # restart: on-failure
+    # environment:
+    #   TZ: Asia/Shanghai
+    #   RABBITMQ_DEFAULT_USER: guest
+    #   RABBITMQ_DEFAULT_PASS: guest
+    # networks: 
+      # - common
+#     RABBITMQ_DEFAULT_VHOST: /
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   expose:
+  #     - 8080
+  #     - 80
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - "mysql"
+  #   environment:
+  #     PMA_HOST: mysql
+  #     PMA_USER: root
+  #     PMA_PASSWORD: root
+  #     TZ: Asia/Shanghai
+  #   restart: on-failure
+
+  # mongo:
+  #   image: mongo
+  #   expose:
+  #     - 27017
+  #   ports:
+  #     - "27017:27017"
+# networks: 
+  #  common:
+    #  driver: bridge
+  elasticsearch:
+    image: elasticsearch:7.6.0
+    ports: 
+      - 9200:9200
+    environment: 
+      - discovery.type=single-node
+      
+ 

@@ -30,7 +30,6 @@ services:
       - mysql
       - redis
       - rabbitmq
-#    image: php:7.1.0-fpm  # see below
     expose:
       - 9000
     ports:
@@ -91,6 +90,12 @@ services:
     # networks: 
       # - common
 #     RABBITMQ_DEFAULT_VHOST: /
+  elasticsearch:
+    image: elasticsearch:7.6.0
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
 
   # phpmyadmin:
   #   image: phpmyadmin/phpmyadmin

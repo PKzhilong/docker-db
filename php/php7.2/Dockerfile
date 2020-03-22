@@ -5,10 +5,7 @@ RUN set -xe \
     && echo "安装 php 以及编译构建组件所需包" \
     && DEBIAN_FRONTEND=noninteractive \
     && apt-get update 
-RUN apt-get install wget git python-setuptools python-dev vim cron libxml2-dev build-essential libfreetype6-dev libjpeg-dev libpng-dev -y \
-    && docker-php-ext-configure gd \
-        --with-freetype-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/ \
+RUN apt-get install wget git cron -y \
     && docker-php-ext-configure soap \
     && easy_install supervisor && echo_supervisord_conf > /etc/supervisord.conf
 RUN docker-php-ext-install iconv mysqli pdo pdo_mysql zip gd bcmath soap\
