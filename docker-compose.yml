@@ -8,8 +8,8 @@ services:
      - 80
      - 443
     ports:
-     - "80:80"
-     - "443:443"
+     - 80:80
+     - 443:443
     # external_links:
     #  - php7.2:php7.2
     env_file: .env
@@ -25,7 +25,9 @@ services:
       TZ: Asia/Shanghai
     restart: on-failure
   php7.2:
-    build: ./php/php7.2
+    build:
+      context: ./php/php7.2
+      dockerfile: Dockerfile2
     depends_on:
       - mysql
       - redis
@@ -113,12 +115,12 @@ services:
   #     TZ: Asia/Shanghai
   #   restart: on-failure
 
-  # mongo:
-  #   image: mongo
-  #   expose:
-  #     - 27017
-  #   ports:
-  #     - "27017:27017"
+  mongo:
+     image: mongo
+     expose:
+       - 27017
+     ports:
+       - 27017:27017
 # networks: 
   #  common:
     #  driver: bridge

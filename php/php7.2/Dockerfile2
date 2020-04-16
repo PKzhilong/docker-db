@@ -1,15 +1,8 @@
-FROM php:7.3-fpm
-
-RUN apt-get update \
-    && apt-get install -y  gnupg \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
-RUN cp /etc/apt/sources.list /etc/apt/sources.list.temp
-ADD sources.list /etc/apt
-
-RUN apt-get update -y
-RUN apt-get -y install gcc make autoconf libc-dev pkg-config libzip-dev
-
-RUN apt-get install -y --no-install-recommends \
+FROM php:7.2-fpm
+RUN sed -i "s@http://deb.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list
+RUN sed -i "s@http://security.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list
+RUN cat /etc/apt/sources.list && apt-get clean
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	git \
 	libmemcached-dev \
 	libz-dev \
@@ -31,7 +24,8 @@ RUN apt-get install -y --no-install-recommends \
 	libmhash2 libmhash-dev libc-client-dev libkrb5-dev libssh2-1-dev \
 	unzip libpcre3 libpcre3-dev \
 	poppler-utils ghostscript libmagickwand-6.q16-dev libsnmp-dev libedit-dev libreadline6-dev libsodium-dev \
-	freetds-bin freetds-dev freetds-common libct4 libsybdb5 tdsodbc libreadline-dev librecode-dev libpspell-dev
+	freetds-bin freetds-dev freetds-common libct4 libsybdb5 tdsodbc libreadline-dev librecode-dev libpspell-dev \
+	wget
 
 # fix for docker-php-ext-install pdo_dblib
 # https://stackoverflow.com/questions/43617752/docker-php-and-freetds-cannot-find-freetds-in-know-installation-directories
@@ -63,19 +57,9 @@ RUN docker-php-ext-install tidy tokenizer wddx zend_test zip
 # RUN docker-php-ext-install pdo_firebird pdo_oci
 
 # install pecl extension
-RUN pecl install ds && \
-	pecl install imagick && \
-	pecl install igbinary && \
-	pecl install redis && \
-	pecl install memcached && \
-	docker-php-ext-enable ds imagick igbinary redis memcached
-
 # https://serverpilot.io/docs/how-to-install-the-php-ssh2-extension
 # 	pecl install ssh2-1.1.2 && \
 # docker-php-ext-enable ssh2
-
-# install pecl extension
-RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 # install xdebug
 # RUN pecl install xdebug && docker-php-ext-enable xdebug
@@ -123,32 +107,14 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 RUN apt-get -y install libfcgi0ldbl nano htop iotop lsof mariadb-client
 
 # install composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-	&& php -r "if (hash_file('sha384', 'composer-setup.php') === 'baf1608c33254d00611ac1705c1d9958c817a1a33bce370c0595974b342601bd80b92a3f46067da89e3b06bff421f182') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-	&& php composer-setup.php \
-	&& php -r "unlink('composer-setup.php');" \
-	&& mv composer.phar /usr/local/sbin/composer \
-	&& chmod +x /usr/local/sbin/composer
-
-# install NewRelic agent
-RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list && \
-	curl https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
-	apt-get -y update && \
-	DEBIAN_FRONTEND=noninteractive apt-get -y install newrelic-php5 newrelic-sysmond && \
-	export NR_INSTALL_SILENT=1 && newrelic-install install
-
-# install SendGrid
-RUN echo "postfix postfix/mailname string localhost" | debconf-set-selections && \
-	echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && \
-	DEBIAN_FRONTEND=noninteractive apt-get install postfix libsasl2-modules -y
+RUN  wget https://getcomposer.org/composer.phar \
+        && mv composer.phar /usr/local/bin/composer \
+        && chmod +x /usr/local/bin/composer \
+        && composer config -g repo.packagist composer https://packagist.phpcomposer.com
 
 # Set default work directory
 ADD scripts/* /usr/local/bin/
 RUN chmod +x  /usr/local/bin/*
-
-# Add default configuration files
-ADD configs/php.ini /usr/local/etc/php/
-ADD configs/www.conf /usr/local/etc/php-fpm.d/
 
 # Health check
 RUN echo '#!/bin/bash' > /healthcheck && \

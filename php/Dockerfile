@@ -1,4 +1,8 @@
-FROM php:7.1.0-fpm
+FROM php:7.4-fpm
+
+RUN sed -i "s@http://deb.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list
+RUN sed -i "s@http://security.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list
+RUN cat /etc/apt/sources.list && apt-get clean
 
 ENV TZ=Asia/Shanghai
 

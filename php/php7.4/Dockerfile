@@ -1,5 +1,9 @@
 FROM php:7.3-fpm
 
+ADD sources.list /etc/apt
+RUN apt-get update
+RUN cp /etc/apt/sources.list /etc/apt/sources.list.temp
+
 RUN apt-get update -y
 RUN apt-get -y install gcc make autoconf libc-dev pkg-config libzip-dev
 
