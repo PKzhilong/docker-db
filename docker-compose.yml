@@ -2,25 +2,25 @@ version: '3'
 services:
   nginx:
     depends_on:
-     - php7.2
+      - php7.2
     image: nginx:latest
     expose:
-     - 80
-     - 443
+      - 80
+      - 443
     ports:
-     - 80:80
-     - 443:443
+      - 80:80
+      - 443:443
     # external_links:
     #  - php7.2:php7.2
     env_file: .env
     volumes:
-     - ${WORK_DIR}:/var/www/html/
-     - ./nginx/conf.d:/etc/nginx/conf.d
-     - ./nginx/logs:/var/log/nginx/
-     #for mac,can improve read io speed 提升读取速度
-     #- ./www:/var/www/html/:cached 
-     #- ./nginx/conf.d:/etc/nginx/conf.d:cached
-     #- ./nginx/logs:/var/log/nginx/:delegated
+      - ${WORK_DIR}:/var/www/html/
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx/
+      #for mac,can improve read io speed 提升读取速度
+      #- ./www:/var/www/html/:cached
+      #- ./nginx/conf.d:/etc/nginx/conf.d:cached
+      #- ./nginx/logs:/var/log/nginx/:delegated
     environment:
       TZ: Asia/Shanghai
     restart: on-failure
@@ -43,8 +43,8 @@ services:
       - ./php/php7.2/supervisor/:/etc/supervisor/conf.d/
       # for mac
       # - ./www/:/var/www/html/:cached
-      
-      
+
+
       # - ./php/php7.2-etc/:/usr/local/etc/
       # - ./php/conf.d:/usr/local/etc/php/conf.d
     environment:
@@ -59,8 +59,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       TZ: Asia/Shanghai
     volumes:
-        - ./mysql/data:/var/lib/mysql
-        - ./mysql/config:/etc/mysql/conf.d
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/config:/etc/mysql/conf.d
     expose:
       - 3306
     ports:
@@ -89,9 +89,9 @@ services:
       TZ: Asia/Shanghai
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-    # networks: 
+      # networks:
       # - common
-#     RABBITMQ_DEFAULT_VHOST: /
+  #     RABBITMQ_DEFAULT_VHOST: /
   elasticsearch:
     image: elasticsearch:7.6.0
     ports:
@@ -116,12 +116,12 @@ services:
   #   restart: on-failure
 
   mongo:
-     image: mongo
-     expose:
-       - 27017
-     ports:
-       - 27017:27017
-# networks: 
-  #  common:
+    image: mongo
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    # networks:
+    #  common:
     #  driver: bridge
  
