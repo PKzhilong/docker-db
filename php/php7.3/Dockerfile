@@ -1,8 +1,8 @@
 FROM php:7.3-fpm
 
-ADD sources.list /etc/apt
-RUN apt-get update
-RUN cp /etc/apt/sources.list /etc/apt/sources.list.temp
+RUN sed -i "s@http://deb.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list
+RUN sed -i "s@http://security.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list
+RUN cat /etc/apt/sources.list && apt-get clean
 
 RUN apt-get update -y
 RUN apt-get -y install gcc make autoconf libc-dev pkg-config libzip-dev

@@ -4,6 +4,7 @@ nginx/conf.d/*
 !nginx/conf.d/default.conf
 mongo/data/*
 mysql2/data/*
+.idea
 
 www/*
 !www/index.php
